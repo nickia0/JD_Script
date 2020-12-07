@@ -1,6 +1,6 @@
 /*
 脚本魔改，添加jdHealthShareCodes.js互助码控制文件，github action用户的好友互助码填写到Action->Settings->Secrets->new Secret里面(Name填写 HEALTH_SHARECODES）
-303行修改为 const shareCodes =  $.isNode() ? require('./jdHealthShareCodes.js') : '';      
+303行修改为 const shareCodes =  $.isNode() ? require('./jdHealthShareCodes.js') : '';     
 健康抽奖机
 活动地址：https://h5.m.jd.com/babelDiy/Zeus/3HBUP66Gnx92mRt2bXbT9VamYWSx/index.html
 已支持IOS双京东账号,Node.js支持N个京东账号
