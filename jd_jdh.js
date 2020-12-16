@@ -6,7 +6,7 @@
 ============Quantumultx===============
 [task_local]
 #京东健康
-10 8 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdh.js, tag=京东健康, enabled=true
+10 8 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_jdh.js, tag=京东健康, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_jdh.png, enabled=true
 
 ================Loon==============
 [Script]
@@ -68,14 +68,15 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       await jdJdh()
     }
   }
-  // 帮助作者，把作者助力码放到用户助力码之后
-  await getAuthorShareCode('https://github.com/Shineslee/JD_Script/new/master/jd_jdh.json');
+  /* 帮助作者，把作者助力码放到用户助力码之后
+  await getAuthorShareCode('https://github.com/Shineslee/JD_Script/blob/master/jd_jdh.json');
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       await helpFriends()
     }
   }
+*/
 })()
   .catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -106,7 +107,7 @@ async function jdJdh() {
   await queryTask(18,"2951198") // 看名医直播
   await queryTask(17,"246147") //
   await queryTask(24, t) // 辟谣
-  // await queryTask(22,"20201215") // TODO：打卡尚未完成
+  await doTask(22,42,`${new Date().getUTCFullYear()}-${new Date().getUTCMonth()+1}-${new Date().getUTCDate()}`) // 去打卡
   await queryTask(20,"362451650500001") // 测一测
   await doTask(23,40,`${rand(10000, 20000)}`) // 走路，这个可以直接提示领奖结果
   // 以下两个需要开启家庭医生才能完成
