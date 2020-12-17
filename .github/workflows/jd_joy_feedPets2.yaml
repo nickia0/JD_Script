@@ -39,4 +39,3 @@ jobs:
                   DD_BOT_SECRET: ${{ secrets.DD_BOT_SECRET || github.event.client_payload.DD_BOT_SECRET }}
                   IGOT_PUSH_KEY: ${{ secrets.IGOT_PUSH_KEY || github.event.client_payload.IGOT_PUSH_KEY }}
                   JOY_FEED_COUNT: ${{ secrets.JOY_FEED_COUNT || github.event.client_payload.JOY_FEED_COUNT }}
-© 2020 GitHub, Inc.
