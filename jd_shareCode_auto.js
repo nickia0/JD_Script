@@ -92,7 +92,7 @@ if ($.isNode()) {
     .finally(() => $.done());
 
 //#region 获取分享码
-/**
+/** 
  * 获取分享码
  * @param {String} cookie 京东cookie字符串
  */
