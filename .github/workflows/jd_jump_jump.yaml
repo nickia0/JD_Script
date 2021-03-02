@@ -6,7 +6,7 @@ name: 母婴跳一跳
 on:
     workflow_dispatch:
     schedule:
-        - cron: "0 * * * *"
+        - cron: "5 0,12,18 22-27 2 *"
     watch:
         types: [started]
     repository_dispatch:
@@ -17,15 +17,16 @@ jobs:
         runs-on: ubuntu-latest
         if: github.event.repository.owner.id == github.event.sender.id
         steps:
-            - uses: actions/checkout@v2
-            - name: Use Node.js 10.x
+            - name: 拉取代码
+              uses: actions/checkout@v2
+            - name: Use Node.js
               uses: actions/setup-node@v1
               with:
-                  node-version: "10.x"
-            - name: npm install
+                  node-version: "12.x"
+            - name: 安装依赖包
               run: |
                   npm install
-            - name: "运行 【母婴跳一跳】"
+            - name: "运行【母婴跳一跳】"
               run: |
                   node jd_jump_jump.js
               env:
