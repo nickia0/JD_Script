@@ -622,7 +622,7 @@ function jdfactory_getHomeData() {
     })
   })
 }
-function readShareCode() {
+/*function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
     $.get({url: "https://gitee.com/Soundantony/RandomShareCode/raw/master/JD_Factory.json",headers:{
@@ -651,6 +651,7 @@ function readShareCode() {
     resolve()
   })
 }
+*/
 //格式化助力码
 function shareCodesFormat() {
   return new Promise(async resolve => {
