@@ -1,8 +1,8 @@
 /*
 jd宠汪汪 搬的https://github.com/uniqueque/QuantumultX/blob/4c1572d93d4d4f883f483f907120a75d925a693e/Script/jd_joy.js
-脚本兼容:QuantumultX,Surge,Loon,JSBox,Node.js
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 IOS用户支持京东双账号,NodeJs用户支持N个京东账号
-更新时间：2021-2-20
+更新时间：2021-2-27
 活动入口：京东APP我的-更多工具-宠汪汪
 建议先凌晨0点运行jd_joy.js脚本获取狗粮后，再运行此脚本(jd_joy_steal.js)可偷好友积分，6点运行可偷好友狗粮
 feedCount:自定义 每次喂养数量; 等级只和喂养次数有关，与数量无关
@@ -35,7 +35,6 @@ const $ = new Env('宠汪汪');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-
 let allMessage = '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -45,13 +44,7 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {};
 } else {
-  let cookiesData = $.getdata('CookiesJD') || "[]";
-  cookiesData = jsonParse(cookiesData);
-  cookiesArr = cookiesData.map(item => item.cookie);
-  cookiesArr.reverse();
-  cookiesArr.push(...[$.getdata('CookieJD2'), $.getdata('CookieJD')]);
-  cookiesArr.reverse();
-  cookiesArr = cookiesArr.filter(item => item !== "" && item !== null && item !== undefined);
+  cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 let message = '', subTitle = '';
 let FEED_NUM = ($.getdata('joyFeedCount') * 1) || 10;   //每次喂养数量 [10,20,40,80]
@@ -101,27 +94,31 @@ const weAppUrl = 'https://draw.jdfcloud.com//pet';
       $.done();
     })
 async function jdJoy() {
-  await getPetTaskConfig();
-  if ($.getPetTaskConfigRes.success) {
-    if ($.isNode()) {
-      if (process.env.JOY_FEED_COUNT) {
-        if ([10, 20, 40, 80].indexOf(process.env.JOY_FEED_COUNT * 1) > -1) {
-          FEED_NUM = process.env.JOY_FEED_COUNT ? process.env.JOY_FEED_COUNT * 1 : FEED_NUM;
-        } else {
-          console.log(`您输入的 JOY_FEED_COUNT 为非法数字，请重新输入`);
+  try {
+    await getPetTaskConfig();
+    if ($.getPetTaskConfigRes.success) {
+      if ($.isNode()) {
+        if (process.env.JOY_FEED_COUNT) {
+          if ([10, 20, 40, 80].indexOf(process.env.JOY_FEED_COUNT * 1) > -1) {
+            FEED_NUM = process.env.JOY_FEED_COUNT ? process.env.JOY_FEED_COUNT * 1 : FEED_NUM;
+          } else {
+            console.log(`您输入的 JOY_FEED_COUNT 为非法数字，请重新输入`);
+          }
         }
       }
+      await feedPets(FEED_NUM);//喂食
+      await Promise.all([
+        petTask(),
+        appPetTask()
+      ])
+      await deskGoodsTask();//限时货柜
+      await enterRoom();
+      await joinTwoPeopleRun()//参加双人赛跑
+    } else {
+      message += `${$.getPetTaskConfigRes.errorMessage}`;
     }
-    await feedPets(FEED_NUM);//喂食
-    await Promise.all([
-      petTask(),
-      appPetTask()
-    ])
-    await deskGoodsTask();//限时货柜
-    await enterRoom();
-    await joinTwoPeopleRun()//参加双人赛跑
-  } else {
-    message += `${$.getPetTaskConfigRes.errorMessage}`;
+  } catch (e) {
+    $.logErr(e)
   }
 }
 //逛商品得100积分奖励任务
@@ -1027,7 +1024,7 @@ function TotalBean() {
               return
             }
             if (data['retcode'] === 0) {
-              $.nickName = data['base'].nickname;
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
             } else {
               $.nickName = $.UserName
             }
